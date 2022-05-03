@@ -1,0 +1,30 @@
+1. Modify the tutorial model to include at least one strategy for reducing overfitting, and other design changes to improve accuracy. Can you beat 88% test accuracy? 89%? 90%? What is your best test accuracy?
+
+2. Describe each change you made to the tutorial model, and provide a rationale for doing so.
+
+3. Which of your changes alters the number of parameters? Explain.
+
+4. Which of your changes introduces new hyperparameters? How did you arrive at suitable values for those hyperparameters? Explain.
+
+5. In a single chart, plot the loss and accuracy by epoch for your revised model. There's a story in every such chart. What does your chart tell us? 
+
+6. Do you think your model is an improvement over the model provided in the tutorial? If so, why? If not, why not?
+
+
+
+
+My initial accuracy without any change is 88.1%. My method to prevent overfitting is to implement L2 regularization and Dropout combined. After tinkering with lots of values, I was able to arrive at an accurace of 87.3%. Although it is lower than out of the box accuracy, when comparing predictions in comparison.png, it is evident that my model predicts with more confidence and less error. This model came from these values when fitted:
+
+model1 = tf.keras.Sequential([
+    layers.Flatten(input_shape=(28, 28)),
+    layers.Dropout(0.1),
+    layers.Dense(128, activation='relu', kernel_regularizer=regularizers.l2(0.0001)),
+    layers.Dropout(0.1),     
+    layers.Dense(128, activation='relu', kernel_regularizer=regularizers.l2(0.0001)),
+    layers.Dropout(0.1),         
+    layers.Dense(10)
+])
+
+I added dropout and regularization to prevent overfitting. After lots of tinkering, hidden layers with size 128, dropout of 0.1, and a very small regularization value was the most consistent and accurate. Adding Dropout and Regularization added a few new hyperparameters, such as the weights in the L2 norm, and the dropout rate. I arrived at suitable values by training, and retraining until I found what worked best. Adding these also increase the overall number of parameters, which increases the entropy of the model, but it was still relatively computationally efficient when training. In the following chart, I will plot the loss vs accuracy of the model (seen in loss_vs_accuracy.png). This chart tells us that loss vs accuracy in this model is nonlinear. As seen in loss_vs_accuracy_expanded.png, it is apparent that the loss values are in an extremely tight group. This shows us that there is consistency in our accuracy across the board, which is an improvement on the initial tutorial model.
+
+In conclusion, I believe that my changes are improvements on the initial tutorial. The average accuracy is down slightly, but as seen in comparison.png, my values on the left hand side raise the accuracy of the sneaker tremendously. I believe that this makes it an improvement because of the overall consistency in my model.

@@ -1,0 +1,73 @@
+1. What preprocessing is done, and why is it necessary to preprocess image data?
+
+Preprocessing that is done to our model includes flattening (or unrolling) the images from a 28x28 array to a 1x784 array. This is useful becasue it transforms matrix operations to vector operations, which saves computational time and resources. 
+
+
+2. How many parameters (weights) does this model have? Provide details of the calculation you use to arrive at your answer. Hint: You can check your work using the sequential model's summary() method.
+
+This is the output from model.summary():
+
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ flatten (Flatten)           (None, 784)               0         
+                                                                 
+ dense (Dense)               (None, 128)               100480    
+                                                                 
+ dense_1 (Dense)             (None, 10)                1290      
+                                                                 
+=================================================================
+Total params: 101,770
+Trainable params: 101,770
+Non-trainable params: 0
+
+The total amount of parameters (weights) are 101,770. There are 0 in the flatten layer, 100,480 in the dense layer, and 1290 in dense_1. 100,480 + 1290 = 101,770.
+
+
+3. What activation function does the tutorial model use in the hidden layer?
+
+This tutorial uses the ReLU activation function in the hidden layer. 
+
+
+4. The tutorial model specifies using the Adam optimizer. What are the differences between Adam and stochastic gradient descent? Hint: See the documentation for optimizers available at: https://keras.io/api/optimizers/ (Links to an external site.) and https://www.tensorflow.org/api_docs/python/tf/keras/optimizers (Links to an external site.).
+
+The Adam optimizer "is a stochastic gradient descent method that is based on adaptive estimation of first order and second order moments". This optimizer is efficient and requires little memory. SGD is an optimizer that uses gradient descent with momentum. Both optimizers by default initialize all weights to some small random value.
+
+
+5. The tutorial model specifies sparse categorical cross-entropy as a loss function. Categorical cross-entropy is related to the entropy calculations we saw earlier with decision trees (when calculating information gain). Generally, we use sparse categorical cross-entropy with multi-class classification problems (as opposed to binary classifications) where we do not use one-hot encoding. For one-hot encoding we use categorical cross-entropy.
+What are the differences between categorical cross-entropy and some other loss function, say, mean squared error (MSE)? What makes sparse categorical cross-entropy appropriate to classification of the Fashion-MNIST dataset?
+
+According to the docunmentation, SparseCategoricalCrossentropy computes the crossentropy loss between the labels and predictions. MSE, according to the documentation, calculates the mean of squares of errors between labels and predictions. Using Sparse Categorical Crossentropy in situations where there are more than two label classes, and the labels are integers, is optimal.
+
+
+6. When the model is training it reports 1875/1875 for each epoch. What does this number indicate?
+
+1875/1875 represents the mini batch. At each epoch, the model learns and adjusts weights between layers using each mini batch.
+
+
+7. What is the mini-batch size of the model?
+
+The mini-batch size of the model is 1875
+
+
+8. While the model achieves ~91% accuracy on training, it only achieves ~88% accuracy on the test data. Why is that?
+
+This is due to overfitting. Overfitting occurs when the model memorizes the noise when training, and negatively impacts performance during testing. 
+
+
+9. Apart from augmenting our data, what are two strategies we could use to reduce the gap between training accuracy and test accuracy?
+
+One strategy to prevent overfitting is adding weight regularization. Regularization is a way to simplify the model, because models with more simplicity provide better accuracy. Simple models are those with with less entropy, or fewer parameters all together. Another strategy to prevent overfitting is adding dropout. This works similar to ensemble learning models, by breaking up the model and getting the "wisdom of the crowd", which is a consensus between models that provide more accuracy when predicting.
+
+
+10. When we make predictions with our fitted model, we get an array of float32 type values. The tutorial uses np.argmax() to identify the predicted class with highest probability for the first element in the test set (9). What is the prediction for the test element at index 73?
+
+To get the prediction for index 73, this code is used:
+print(predictions[73])
+np.argmax(predictions[73])
+
+Output:
+[1.9855712e-01 3.0161734e-04 4.4133626e-02 3.9582316e-02 1.5723476e-03
+ 5.9540586e-08 7.1190900e-01 1.3523547e-05 3.9299997e-03 3.4438995e-07]
+6
+
+The predicted value for index 73 is 6, or a shirt. The weights are seen in the array, and it is clear that the model predicts 6 (or shirt) with the highest value. 
